@@ -7,18 +7,18 @@
                      <input type="submit" value="" class="submit-search">
                   </form>
                </div>
-
+              <!-- 카테고리 위젯
                <div class="widget widget--categories">
+                  {% load taggit_templatetags2_tags %}
+                  {% get_taglist as tags %}
                    <h3 class="h6">Categories.</h3>
                    <ul>
-                        <li><a href="#0" title="">Wordpress</a> (2)</li>
-                        <li><a href="#0" title="">Ghost</a> (14)</li>
-                        <li><a href="#0" title="">Joomla</a> (5)</li>
-                        <li><a href="#0" title="">Drupal</a> (3)</li>
-                        <li><a href="#0" title="">Magento</a> (2)</li>
-                        <li><a href="#0" title="">Uncategorized</a> (9)</li>
+                     {% for tag in tags %}
+                        <li><a href="#0" title="">{{ tag }} ({{tag.num_times}})</li>
+                     {% endfor %}
                     </ul>
                 </div>
+             -->
 
                 <div class="widget widget_text group">
                     <h3 class="h6">Widget Text.</h3>
@@ -31,16 +31,14 @@
                 </div>
 
                 <div class="widget widget_tags">
+                  {% load taggit_templatetags2_tags %}
+                  {% get_taglist as tags %}
                     <h3 class="h6">Post Tags.</h3>
 
                     <div class="tagcloud group">
-                        <a href="#0">Corporate</a>
-                        <a href="#0">Onepage</a>
-                        <a href="#0">Agency</a>
-                        <a href="#0">Multipurpose</a>
-                        <a href="#0">Blog</a>
-                        <a href="#0">Landing Page</a>
-                        <a href="#0">Resume</a>
+                        {% for tag in tags %}
+                          <a href="#0">{{ tag }} ({{tag.num_times}})</a>
+                        {% endfor %}
                     </div>
                 </div>
 

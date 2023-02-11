@@ -26,8 +26,12 @@
 
                         <div class="entry__meta">
                             <ul>
-                                <li>{{ post.published_date }}</li>
-                                <li><a href="#" title="" rel="category tag">post.tag</a></li>
+                                <li>{{ post.published_date|date:"Y-m-d" }}</li>
+                                <li>
+                                    {% for tag in post.tags.all %}
+                                        <a href="#" title="" rel="category tag">{{ tag.name }}</a>, 
+                                    {% endfor %}
+                                </li>
                                 <li>{{ post.author}}</li>
                             </ul>
                         </div>
@@ -42,14 +46,16 @@
                     </div>
 
                     <div class="entry__content">
-                        <p class="lead">
+                        <p class="">
                           {{ post.content|linebreaksbr }}
                         </p>
                     </div> <!-- entry__content -->
 
                     <p class="entry__tags">
                         <span>Tagged in </span>:
-                        <a href="#0">orci</a>, <a href="#0">lectus</a>, <a href="#0">varius</a>, <a href="#0">turpis</a>
+                                    {% for tag in post.tags.all %}
+                                        <a href="#0">{{ tag.name }}</a>, 
+                                    {% endfor %}
                     </p>
 
                     <ul class="entry__post-nav h-group">

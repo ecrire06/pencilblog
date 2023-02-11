@@ -49,10 +49,15 @@ INSTALLED_APPS = [
 
     # 써드파티 앱
     'django_extensions',
+    'taggit',
+    'taggit_templatetags2',
 
     # 사용자 앱
     'blog',
 ]
+
+# Application Settings
+TAGGIT_CASE_INSENSITIVE = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
