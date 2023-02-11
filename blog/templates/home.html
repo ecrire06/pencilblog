@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<body id="top">
+
+{% include 'preloader.html' %}
+{% include 'header.html' %}
+
+    <!-- Content
+    ================================================== -->
+    <div class="s-content">
+
+        <div class="row">
+
+            <div id="main" class="s-content__main large-8 column">
+              {% for post in post_list %}
+                <article class="entry">
+
+                    <header class="entry__header">
+
+                        <h2 class="entry__title h1">
+                            <a href="post/{{ post.pk }}" title="">{{ post.title }}</a>
+                        </h2>
+
+                        <div class="entry__meta">
+                            <ul>
+                                <li>{{ post.published_date }}</li>
+                                <li><a href="#" title="" rel="category tag">post.tag</a></li>
+                                <li>{{ post.author}}</li>
+                            </ul>
+                        </div>
+
+                    </header>
+
+                    <div class="entry__content">
+                        <p>
+                        {{ post.content|truncatewords:30 }}
+                        </p>
+                    </div>
+
+                </article> <!-- end entry -->
+              {% endfor %}
+           </div> <!-- end main -->
+
+
+{% include 'sidebar.html' %}
+
+       </div> <!-- end row -->
+
+   </div> <!-- end content-wrap -->
+
+
+{% include 'footer.html' %}
+
+
+    <!-- Java Script
+    ================================================== -->
+    <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+
+{% endblock %}
