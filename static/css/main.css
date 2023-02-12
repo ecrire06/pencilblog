@@ -91,7 +91,7 @@ html, body {
 
 body {
     background: #f5f5f5;
-    font-family: "Merriweather", serif, "Noto Sans KR", sans-serif;
+    font-family: "Merriweather", serif, 'Gothic A1', sans-serif;
     font-size: 1.6rem;
     font-style: normal;
     font-weight: normal;
@@ -222,7 +222,7 @@ p img {
 }
 
 p.lead {
-    font-family: "Merriweather", serif, "Noto Sans KR", sans-serif;
+    font-family: "Merriweather", serif, 'Gothic A1', sans-serif;
     font-weight: 300;
     font-size: 2.025rem;
     line-height: 1.975;
@@ -241,12 +241,12 @@ em, i, strong, b {
 }
 
 em, i {
-    font-family: "Merriweather", serif, "Noto Sans KR", sans-serif;
+    font-family: "Merriweather", serif, 'Gothic A1', sans-serif;
     font-style: italic;
 }
 
 strong, b {
-    font-family: "Merriweather", serif, "Noto Sans KR", sans-serif;
+    font-family: "Merriweather", serif, 'Gothic A1', sans-serif;
     font-weight: 700;
 }
 
@@ -277,7 +277,7 @@ blockquote {
 }
 
 blockquote p {
-    font-family: "Merriweather", serif, "Noto Sans KR", sans-serif;
+    font-family: "Merriweather", serif, 'Gothic A1', sans-serif;
     font-weight: 400;
     padding: 0;
     font-size: 2.278rem;
@@ -310,7 +310,7 @@ blockquote cite, blockquote cite a, blockquote cite a:visited {
 }
 
 abbr {
-    font-family: "Merriweather", serif, "Noto Sans KR", sans-serif;
+    font-family: "Merriweather", serif, 'Gothic A1', sans-serif;
     font-weight: 600;
     font-variant: small-caps;
     text-transform: lowercase;
@@ -469,7 +469,7 @@ table {
     border-width: 0;
     width: 100%;
     max-width: 100%;
-    font-family: "Merriweather", serif, "Noto Sans KR", sans-serif;
+    font-family: "Merriweather", serif, 'Gothic A1', sans-serif;
     border-collapse: collapse;
 }
 
@@ -2324,7 +2324,7 @@ button::-moz-focus-inner, input::-moz-focus-inner {
     display: inline-block;
     margin: 0;
     padding: 0;
-    font-family: "Merriweather", serif, "Noto Sans KR", sans-serif;
+    font-family: "Merriweather", serif, 'Gothic A1', sans-serif;
 }
 
 .entry__meta ul li::after {
@@ -2352,7 +2352,7 @@ button::-moz-focus-inner, input::-moz-focus-inner {
 }
 
 .entry__tags a {
-    font-family: "Merriweather", serif, "Noto Sans KR", sans-serif;
+    font-family: "Merriweather", serif, 'Gothic A1', sans-serif;
     font-size: 1.6rem;
     text-transform: none;
     letter-spacing: 0;
@@ -2365,7 +2365,7 @@ button::-moz-focus-inner, input::-moz-focus-inner {
 .entry__post-nav {
     margin: 2.4rem 0 3.2rem;
     padding: 1.6rem 0 0 0;
-    font-family: "Merriweather", serif, "Noto Sans KR", sans-serif;
+    font-family: "Merriweather", serif, 'Gothic A1', sans-serif;
 }
 
 .entry__post-nav li {

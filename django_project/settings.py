@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'taggit',
     'taggit_templatetags2',
+    'django_editorjs_fields',
 
     # 사용자 앱
     'blog',
@@ -143,6 +144,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
   STATIC_DIR,
 ]
+
+# ==============MEDIA==================
+MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")
+MEDIA_URL = "/media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

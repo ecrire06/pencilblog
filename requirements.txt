@@ -15,8 +15,14 @@ debugpy==1.2.1
 decorator==5.1.1
 distlib==0.3.3
 Django @ file:///home/runner/.cache/pypoetry/artifacts/0a/6e/a7/ad9b81885c41d7edd5f5fd91479a9c6be684b7ad660172f6b1f93c7d42/Django-3.2.13-py3-none-any.whl
+django-classy-tags==4.0.0
+django-editorjs==0.2.1
+django-editorjs-fields==0.2.7
 django-extensions==3.2.1
 django-taggit==3.1.0
+django-taggit-templatetags==0.2.5
+django-taggit-templatetags2==1.6.1
+django-templatetag-sugar==1.0
 docopt==0.6.2
 executing==1.2.0
 filelock==3.3.2

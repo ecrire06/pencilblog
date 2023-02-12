@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<body id="top">
+
+{% include 'preloader.html' %}
+{% include 'header.html' %}
+
+
+    <!-- Content
+    ================================================== -->
+    <div class="s-content">
+
+        <div class="row add-bottom">
+
+            <div class="column large-full">
+
+                <h1 class="h-remove-top">글 작성하기</h1>
+
+                <form method="POST">
+                  {% csrf_token %}
+                  {{ form.as_p }}
+                  {{ form.media }}
+                  <button type="submit" class="btn btn--primary h-full-width" value="제출">Save</button>
+                </form>
+              
+            </div>
+
+        </div> <!-- end row -->
+
+   </div> <!-- end content-wrap -->
+
+
+{% include 'footer.html' %}
+
+    <!-- Java Script
+    ================================================== -->
+    <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+
+{% endblock %}
