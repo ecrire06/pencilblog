@@ -55,10 +55,15 @@ INSTALLED_APPS = [
 
     # 사용자 앱
     'blog',
+    'loginapp',
 ]
 
 # Application Settings
+# =============TAGGIT==================
 TAGGIT_CASE_INSENSITIVE = True
+# ============LOGINAPP=================
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

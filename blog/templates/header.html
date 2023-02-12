@@ -37,6 +37,18 @@
                     <li><a href="{% url 'archives' %}">Archives</a></li>
                     <li><a href="{% url 'about' %}">About</a></li>
                     <li><a href="{% url 'changelog' %}">ChangeLog</a></li>
+                    <li>
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'logout' %}">{{ user.username }} (로그아웃)</a>
+                        {% else %}
+                        <a href="{% url 'login' %}">로그인</a>
+                        {% endif %}
+                    </li>
+                    <li>
+                      {% if not user.is_authenticated %}
+                      <a class="nav-link" href="{% url 'signup' %}">회원가입</a>
+                      {% endif %}
+                    </li>
                 </ul> <!-- end #nav -->
 
            </div>
