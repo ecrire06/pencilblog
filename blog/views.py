@@ -5,7 +5,7 @@ from .forms import PostForm
 
 from django.shortcuts import render
 
-# 블로그 Post 관련 Class based View
+# =============POST RELATED CLASS BASED VIEWS==============
 
 class PostListView(generic.ListView):
     model = Post
@@ -25,7 +25,19 @@ class PostCreateView(generic.CreateView):
   template_name = 'new.html'
   success_url = reverse_lazy('home')
 
-# 일단 간단히 만들어놓은 View
+class PostUpdateView(generic.UpdateView):
+  model = Post
+  form_class = PostForm
+  template_name = 'new.html'
+  success_url = reverse_lazy('home')
+
+class PostDeleteView(generic.DeleteView):
+  model = Post
+  template_name = "delete.html"
+  success_url = reverse_lazy("home")
+
+# ===============FUNCTION BASED VIEWS=====================
+# =========JUST FOR SIMPLE LINK FOR TEMPLATES==============
 
 def archives(request):
   return render(request, 'archives.html')
