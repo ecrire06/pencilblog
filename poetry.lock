@@ -27,6 +27,17 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-search-views"
+version = "0.3.7"
+description = "Search List class-based views for Django"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+Django = ">=1.8"
+
+[[package]]
 name = "django-taggit"
 version = "3.1.0"
 description = "django-taggit is a reusable Django application for simple tagging."
@@ -36,6 +47,17 @@ python-versions = ">=3.6"
 
 [package.dependencies]
 Django = ">=3.2"
+
+[[package]]
+name = "django-taggit-labels"
+version = "0.7.0"
+description = "Alternate labels for django-taggit"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+django-taggit = ">=0.17.0"
 
 [[package]]
 name = "pytz"
@@ -56,14 +78,15 @@ python-versions = ">=3.5"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "dd1b54a4d996ede3541457dcc58af4d055beb78d3cc200d1d9fbb45ca781347e"
+content-hash = "081ca3f37fced9bc3016c5c48a5fcaaa35503e34aaeb478b76a0e7e3feb3ae00"
 
 [metadata.files]
 asgiref = []
 django = []
-django-taggit = [
-    {file = "django-taggit-3.1.0.tar.gz", hash = "sha256:c8f2e4eae387939089b3d75d1d8649e008880970c068ce9d0e82f87fd5e29508"},
-    {file = "django_taggit-3.1.0-py3-none-any.whl", hash = "sha256:543218ac346fbe02a65733e0341c91b57a3e0f7a41568966b26f1cea9edc4805"},
+django-search-views = [
+    {file = "django-search-views-0.3.7.tar.gz", hash = "sha256:ba54cf9ad003edece2d2f785d7519daef4a95fedb42bd357baee9e85856881e7"},
 ]
+django-taggit = []
+django-taggit-labels = []
 pytz = []
 sqlparse = []

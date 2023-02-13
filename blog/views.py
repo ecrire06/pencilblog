@@ -2,10 +2,13 @@
 from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 
 # ============CUSTOM MADE===============
 from .models import Post
 from .forms import PostForm
+from search_views.search import SearchListView
+from search_views.filters import BaseFilter
 
 from django.shortcuts import render
 
@@ -62,6 +65,20 @@ class PostDeleteView(LoginRequiredMixin, generic.DeleteView):
         author = self.request.user
         return self.model.objects.filter(author=author)
 
+# =============SEARCH=====================
+class PostSearchView(generic.ListView):
+    model = Post
+    context_object_name = 'search_list'
+    template_name = 'search.html'
+    paginate_by = 4
+
+    def get_queryset(self):  # new
+        query = self.request.GET.get("q")
+        object_list = Post.objects.filter(
+            Q(title__icontains=query) | Q(body_editorjs_custom__icontains=query)
+        )
+        return object_list
+    
 # ===============FUNCTION BASED VIEWS=====================
 # =========JUST FOR SIMPLE LINK FOR TEMPLATES==============
 

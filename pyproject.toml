@@ -12,4 +12,6 @@ version = "0.1.0"
 Django = "^3.0"
 python = "^3.8"
 django-taggit = "^3.1.0"
+django-taggit-labels = "^0.7.0"
+django-search-views = "^0.3.7"
 [tool.poetry.dev-dependencies]

@@ -19,7 +19,9 @@ django-classy-tags==4.0.0
 django-editorjs==0.2.1
 django-editorjs-fields==0.2.7
 django-extensions==3.2.1
+django-search-views==0.3.7
 django-taggit==3.1.0
+django-taggit-labels==0.7.0
 django-taggit-templatetags==0.2.5
 django-taggit-templatetags2==1.6.1
 django-templatetag-sugar==1.0

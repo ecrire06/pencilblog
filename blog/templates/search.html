@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<body id="top">
+
+{% include 'preloader.html' %}
+{% include 'header.html' %}
+
+    <!-- Content
+    ================================================== -->
+    <div class="s-content">
+
+        <div class="row">
+
+            <div id="main" class="s-content__main large-8 column">
+              {% for post in search_list %}
+                <article class="entry">
+
+                    <header class="entry__header">
+
+                        <h2 class="entry__title h1">
+                            <a href="{% url 'single' post.pk %}" title="">{{ post.title }}</a>
+                        </h2>
+
+                        <div class="entry__meta">
+                            <ul>
+                                <li>{{ post.created_date|date:"Y-m-d" }}</li>
+                                <li>
+                                    {% for tag in post.tags.all %}
+                                      {% if forloop.last %}
+                                        <a href="#" title="" rel="category tag">{{ tag.name }}</a>
+                                      {% else %}
+                                        <a href="#" title="" rel="category tag">{{ tag.name }}</a>, 
+                                      {% endif %}
+                                    {% endfor %}
+                                </li>
+                                <li>{{ post.author}}</li>
+                            </ul>
+                        </div>
+
+                    </header>
+
+                    <div class="entry__content">
+                        <p>
+                          post.content
+                        </p>
+                    </div>
+
+                </article> <!-- end entry -->
+              {% endfor %}
+                <nav class="pgn">
+                    <ul>
+                        <!--Previous-->
+                        {% if page_obj.has_previous %}
+                            <li><a class="pgn__prev" href="?page={{ page_obj.previous_page_number }}">Prev</a></li>
+                        {% else %}
+                            <li><a class="pgn__prev" href="#0">Prev</a></li>
+                        {% endif %}
+                      
+                        <!--Current-->
+                        {% for i in page_obj.paginator.page_range %}
+                            {% if page_obj.number == i %}
+                                <li><span class="pgn__num current">{{ i }}</span></li>
+                            {% else %}
+                                <li><a class="pgn__num" href="?page={{ i }}">{{ i }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        <!--Next-->
+                        {% if page_obj.has_next %}
+                          <li><a class="pgn__next" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                        {% else %}
+                          <li><a class="pgn__next" href="#0">Next</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+           </div> <!-- end main -->
+
+{% include 'sidebar.html' %}
+
+       </div> <!-- end row -->
+
+   </div> <!-- end content-wrap -->
+
+
+{% include 'footer.html' %}
+
+
+    <!-- Java Script
+    ================================================== -->
+    <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+
+{% endblock %}

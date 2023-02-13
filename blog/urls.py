@@ -1,4 +1,4 @@
-from .views import PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView, archives, blog, demo, about, changelog
+from .views import PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView, PostSearchView, archives, blog, demo, about, changelog
 from django.urls import path, include
 
 # ============EDITORJS============
@@ -17,6 +17,9 @@ urlpatterns = [
   path('new/', PostCreateView.as_view(), name='new'),
   path('update/<int:pk>', PostUpdateView.as_view(), name="update"),
   path('delete/<int:pk>', PostDeleteView.as_view(), name="delete"),
+
+  # ============SEARCH===============
+  path('search/', PostSearchView.as_view(), name='search_results'),
   
   # =============EDITORJS==============
   path('editorjs/', include('django_editorjs_fields.urls')),
