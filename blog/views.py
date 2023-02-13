@@ -1,5 +1,9 @@
+# ===========DJANGO RELATED==================
 from django.urls import reverse_lazy
 from django.views import generic
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+# ============CUSTOM MADE===============
 from .models import Post
 from .forms import PostForm
 
@@ -20,21 +24,43 @@ class PostDetailView(generic.DetailView):
   model = Post
   template_name = 'single.html'
 
-class PostCreateView(generic.CreateView):
+class PostCreateView(LoginRequiredMixin, generic.CreateView):
   form_class = PostForm
   template_name = 'new.html'
   success_url = reverse_lazy('home')
 
-class PostUpdateView(generic.UpdateView):
+  login_url = 'login'
+  redirect_field_name = 'main'
+  
+  def form_valid(self, form):
+      form.instance.author = self.request.user
+      return super().form_valid(form)
+
+
+class PostUpdateView(LoginRequiredMixin, generic.UpdateView):
   model = Post
   form_class = PostForm
   template_name = 'new.html'
   success_url = reverse_lazy('home')
 
-class PostDeleteView(generic.DeleteView):
+  login_url = 'login'
+  redirect_field_name = 'main'
+  
+  def get_queryset(self):
+        author = self.request.user
+        return self.model.objects.filter(author=author)
+
+class PostDeleteView(LoginRequiredMixin, generic.DeleteView):
   model = Post
   template_name = "delete.html"
   success_url = reverse_lazy("home")
+
+  login_url = 'login'
+  redirect_field_name = 'main'
+
+  def get_queryset(self):
+        author = self.request.user
+        return self.model.objects.filter(author=author)
 
 # ===============FUNCTION BASED VIEWS=====================
 # =========JUST FOR SIMPLE LINK FOR TEMPLATES==============

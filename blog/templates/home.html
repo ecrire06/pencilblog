@@ -26,10 +26,14 @@
 
                         <div class="entry__meta">
                             <ul>
-                                <li>{{ post.published_date|date:"Y-m-d" }}</li>
+                                <li>{{ post.created_date|date:"Y-m-d" }}</li>
                                 <li>
                                     {% for tag in post.tags.all %}
+                                      {% if forloop.last %}
+                                        <a href="#" title="" rel="category tag">{{ tag.name }}</a>
+                                      {% else %}
                                         <a href="#" title="" rel="category tag">{{ tag.name }}</a>, 
+                                      {% endif %}
                                     {% endfor %}
                                 </li>
                                 <li>{{ post.author}}</li>
