@@ -78,7 +78,17 @@ class PostSearchView(generic.ListView):
             Q(title__icontains=query) | Q(body_editorjs_custom__icontains=query)
         )
         return object_list
-    
+
+# ==============TAGGED=======================
+class TaggedPostView(generic.ListView):
+  model = Post
+  context_object_name = 'tagged_list'
+  template_name = 'tagged.html'
+  paginate_by = 4
+
+  def get_queryset(self):
+      return Post.objects.filter(tags__name=self.kwargs['tag'])
+  
 # ===============FUNCTION BASED VIEWS=====================
 # =========JUST FOR SIMPLE LINK FOR TEMPLATES==============
 

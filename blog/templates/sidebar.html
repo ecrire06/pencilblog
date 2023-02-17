@@ -37,7 +37,7 @@
 
                     <div class="tagcloud group">
                         {% for tag in tags %}
-                          <a href="#0">{{ tag }} ({{tag.num_times}})</a>
+                          <a href="{% url 'tagged-post' tag.name %}">{{ tag }} ({{tag.num_times}})</a>
                         {% endfor %}
                     </div>
                 </div>

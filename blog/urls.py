@@ -1,4 +1,4 @@
-from .views import PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView, PostSearchView, archives, blog, demo, about, changelog
+from .views import PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView, PostSearchView, TaggedPostView, archives, blog, demo, about, changelog
 from django.urls import path, include
 
 # ============EDITORJS============
@@ -20,6 +20,9 @@ urlpatterns = [
 
   # ============SEARCH===============
   path('search/', PostSearchView.as_view(), name='search_results'),
+
+  # =============TAGGED===================
+  path('tag/<str:tag>', TaggedPostView.as_view(), name='tagged-post'),
   
   # =============EDITORJS==============
   path('editorjs/', include('django_editorjs_fields.urls')),

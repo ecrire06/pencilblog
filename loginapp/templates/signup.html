@@ -21,9 +21,8 @@
 
                 <form method="POST", action="{% url 'signup' %}">
                   {% csrf_token %}
-                  {% include "form_errors.html" %}
                   <div class="mb-3">
-                    <label for="username">사용자 이름</label>
+                    <label for="username">사용자ID</label>
                     <input type="text" class="form-control" name="username" id="username"
                              value="{{ form.username.value|default_if_none:'' }}">
                   </div>
@@ -42,7 +41,8 @@
                       <input type="text" class="form-control" name="email" id="email"
                              value="{{ form.email.value|default_if_none:'' }}">
                   </div>
-                  <button type="submit" class="btn btn--primary h-full-width" value="생성하기">Create!</button>
+                  <button type="submit" class="btn btn--primary" value="생성하기">Create!</button>
+                  {% include "form_errors.html" %}
                 </form>
               
             </div>
