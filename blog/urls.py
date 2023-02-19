@@ -1,10 +1,6 @@
 from .views import PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView, PostSearchView, TaggedPostView, archives, blog, demo, about, changelog
 from django.urls import path, include
 
-# ============EDITORJS============
-from django.conf import settings
-from django.conf.urls.static import static
-
 urlpatterns = [
   path('', PostListView.as_view(), name='home'),
   path('post/<int:pk>', PostDetailView.as_view(), name='single'),
@@ -26,4 +22,4 @@ urlpatterns = [
   
   # =============EDITORJS==============
   path('editorjs/', include('django_editorjs_fields.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]

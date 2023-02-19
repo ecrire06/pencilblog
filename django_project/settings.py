@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     'taggit',
     'taggit_templatetags2',
     'django_editorjs_fields',
+    'hitcount',
+    'next_prev',
 
     # 사용자 앱
     'blog',
@@ -64,6 +66,8 @@ TAGGIT_CASE_INSENSITIVE = True
 # ============LOGINAPP=================
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
+# ===========COMMENT==================
+COMMENTS_APP = 'django_comments_xtd'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -151,7 +155,7 @@ STATICFILES_DIRS = [
 ]
 
 # ==============MEDIA==================
-MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")
+MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 MEDIA_URL = "/media/"
 
 # Default primary key field type

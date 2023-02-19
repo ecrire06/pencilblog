@@ -1,0 +1,16 @@
+{% load i18n widget_tweaks spider_rdf %}
+<ul class="w3-ul" rel="spkc:properties">
+  {% for field in form.visible_fields %}
+    {% if field.field.widget.input_type == "start_pseudo" %}
+      <li>
+        {% render_field field %}
+          <ul class="w3-ul">
+    {% elif field.field.widget.input_type == "stop_pseudo" %}
+          </ul>
+        {% render_field field %}
+      </li>
+    {% else %}
+      {% include field.field.view_form_field_template|default:"spider_base/partials/fields/default_view_field.html" %}
+    {% endif %}
+  {% empty %}{{form_empty_message|safe}}{% endfor %}
+</ul>

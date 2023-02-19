@@ -3,14 +3,15 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
+from django.shortcuts import render
 
 # ============CUSTOM MADE===============
 from .models import Post
 from .forms import PostForm
 from search_views.search import SearchListView
 from search_views.filters import BaseFilter
-
-from django.shortcuts import render
+from hitcount.views import HitCountDetailView
+from next_prev import next_in_order, prev_in_order
 
 # =============POST RELATED CLASS BASED VIEWS==============
 
@@ -23,9 +24,19 @@ class PostListView(generic.ListView):
     def get_queryset(self):
         return Post.objects.all().order_by('-created_date')
 
-class PostDetailView(generic.DetailView):
+class PostDetailView(HitCountDetailView):
   model = Post
   template_name = 'single.html'
+  count_hit = True
+
+  def get_context_data(self, **kwargs):
+      context   = super().get_context_data(**kwargs)      
+      query_set = Post.objects.all()
+      now = self.object
+      context['next'] = next_in_order(now)
+      context['previous'] = prev_in_order(now, loop=True)
+      return context
+
 
 class PostCreateView(LoginRequiredMixin, generic.CreateView):
   form_class = PostForm

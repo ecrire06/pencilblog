@@ -1,0 +1,239 @@
+{% load i18n spider_paging %}
+
+{# z-index important for trumbowyg, set higher if not enough #}
+<div id="share_modal_presenter" class="w3-modal" style="height:100%; z-index:101;">
+  <div class="w3-modal-content spkc-modal-content">
+    <header class="w3-container w3-teal">
+      <span onclick="close_qrmodal(event)"
+      class="w3-button w3-black w3-display-topright">&times;</span>
+      <h2>{% trans "Share" %}</h2>
+    </header>
+    <div style="margin-bottom:10px">
+      <div class="w3-container w3-padding w3-mobile" id="share_placeholder">
+      </div>
+    </div>
+    <div class="w3-container w3-text-black">
+      <div class="" id="share_remotelink_wrapper"  style="word-break: break-all">
+        {# escapejs is a weaker escape, don't use it #}
+        <a type="text" rel="nofollow" href="{{remotelink}}{{remotelink_extra}}" id="share_remotelink"></a>
+        <span style="margin-left:10px;padding:1px 10px;white-space: nowrap;word-break: normal;display:inline-block" id="share_copy_clipboard" class="w3-round w3-grey">
+          <i class="fas fa-clipboard" aria-label="{% trans 'Clipboard' %}"></i>
+        </span>
+      </div>
+      <div style="padding-bottom:20px">
+        <h2>{% trans "Select Token "%}</h2>
+        <select id="share_token_selector">
+          <option value="" selected="selected"></option>
+          {% if request.auth_token %}<option value="{{request.auth_token.id}}" data-token="{{request.auth_token.token}}">{{request.auth_token}}</option>{% endif %}
+        </select>
+        {% if request.is_special_user %}
+        <a href="#" class="w3-button w3-grey w3-hide" id="update_request_button">
+          <i class="fas fa-bell" style="margin-right:10px" aria-hidden="true"></i>{% trans 'View Update-Request' %}
+        </a>
+        <div style="padding-top:10px">
+          <button class="w3-button w3-grey" id="share_add_button" value="add">
+            {% list_parameters "search" as cur_search_params %}
+            {% list_parameters "id" as cur_id_params %}
+            <i class="fas fa-file-export" style="margin-right:10px" aria-hidden="true"></i>{% if uc.is_index %}{% trans 'Login-Token' %}{% else %}{% if cur_search_params or cur_id_params %}{% trans 'Share (filtered)' %}{% else %}{% trans 'Share' %}{% endif %}{% endif %}
+          </button>
+          {% if not uc.is_index %}
+            <button class="w3-button w3-orange" id="share_add_restricted_button" value="add_restricted">
+              <i class="fas fa-plus-circle" style="margin-right:10px" aria-hidden="true"></i>{% trans 'Create Request-Token' %}
+            </button>
+          {% endif %}
+          <button class="w3-button w3-grey" id="share_refresh_button" value="refresh">
+            <i class="fas fa-sync" style="margin-right:10px" aria-hidden="true"></i>{% trans 'Refresh' %}
+          </button>
+          <button class="w3-button w3-grey" id="share_delete_button" value="delete">
+            <i class="fas fa-trash" style="margin-right:10px" aria-hidden="true"></i> {% trans 'Delete' %}
+          </button>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+let remotelink = document.getElementById('share_remotelink');
+let update_request_button = document.getElementById('update_request_button');
+let share_placeholder = document.getElementById('share_placeholder');
+let presenter = document.getElementById('share_modal_presenter');
+let token_selector = document.getElementById('share_token_selector');
+let share_copy_clipboard = document.getElementById('share_copy_clipboard');
+
+function update_qrmodal(){
+  {# escapejs is a weaker escape, don't use it #}
+  let _remotelink = "{{remotelink}}{{remotelink_extra}}";
+  let _confirmlink = "{% url 'spider_base:token-confirm-update-request' %}?next={{request.path|urlencode}}%3Fpage%3D{{request.GET.page|default:'1'}}&{{sanitized_GET}}";
+  let _token = token_selector.options[token_selector.options.selectedIndex];
+  {% if request.is_special_user %}
+  if(token_selector.value != ""){
+    if(_token.dataset.needs_confirmation == "true"){
+      _confirmlink = `${_confirmlink}refid=${_token.value}&`;
+      update_request_button.href = _confirmlink;
+      update_request_button.classList.remove("w3-hide")
+    } else {
+      update_request_button.classList.add("w3-hide")
+    }
+  }
+  {% endif %}
+  if ({% if not uc.is_index %}_token.value == "" || {% endif %}_token.dataset.token){
+    if(_token.dataset.token){
+      _remotelink = `${_remotelink}token=${_token.dataset.token}&`;
+    }
+    remotelink.href = _remotelink;
+    {% if not uc.is_index %}
+      remotelink.text = _remotelink;
+    {% else %}
+      remotelink.text = _token.dataset.token;
+    {% endif %}
+    let qr = qrcode(0, 'H');
+    qr.addData(_remotelink);
+    qr.make();
+    share_placeholder.innerHTML = qr.createImgTag(4);
+    remotelink.classList.remove("w3-hide");
+    share_copy_clipboard.classList.remove("w3-hide");
+    share_placeholder.classList.remove("w3-hide");
+  } else {
+    remotelink.classList.add("w3-hide");
+    share_copy_clipboard.classList.add("w3-hide");
+    share_placeholder.classList.add("w3-hide");
+  }
+  return false;
+}
+
+
+async function link_to_clipboard(event){
+  {% if uc.is_index %}
+    await navigator.clipboard.writeText(remotelink.text);
+  {% else %}
+    await navigator.clipboard.writeText(remotelink.href);
+  {% endif %}
+  share_copy_clipboard.firstElementChild.classList.replace("fa-clipboard", "fa-clipboard-check");
+  share_copy_clipboard.classList.replace("w3-grey", "w3-green");
+  await new Promise((resolve) => setTimeout(resolve, 3000));
+  share_copy_clipboard.classList.replace("w3-green", "w3-grey");
+  share_copy_clipboard.firstElementChild.classList.replace("fa-clipboard-check", "fa-clipboard");
+  return false;
+}
+share_copy_clipboard.addEventListener("click", link_to_clipboard);
+
+
+async function update_share_tokens(event){
+  if(token_selector.disabled==true)
+    return;
+  token_selector.disabled=true;
+  let data;
+  let body = new URLSearchParams();
+  if(event){
+    event.preventDefault();
+    if (event.target.value == "delete"){
+      if(token_selector.value != ""){
+        body.append("delete_tokens", token_selector.value);
+      }
+    } else if(event.target.value == "add") {
+      body.append("add_token", true);
+    } else if(event.target.value == "add_restricted") {
+      body.append("restrict", true);
+      body.append("add_token", true);
+    }
+
+  }
+  req = new Request('{% url "spider_base:token-owner-share" token=uc.token %}?{% if not uc.is_index %}{{sanitized_GET}}{% endif %}', {
+      method: 'POST',
+      body: body,
+      credentials: "same-origin",
+      headers: {
+         "X-CSRFToken": "{{csrf_token}}",
+      }
+  });
+  let fetch_req = fetch(req).then(
+    function(response) {
+      if (!response.ok){
+        return null;
+      }
+      return response.json().then(function (d){
+        d["tokens"].sort(function(a, b){
+          if (a.needs_confirmation && !b.needs_confirmation){
+            return -1;
+          }
+          if (a.admin_key && a.token && !b.admin_key){
+            return -1;
+          }
+          if (a.token && !b.token){
+            return -1;
+          }
+          if (a.admin_key && !b.admin_key){
+            return -1;
+          }
+          if (a.id < b.id){
+            return -1;
+          } else if (a.id > b.id){
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+        return d;
+      });
+    },
+    function(response) {
+      return null;
+    }
+  );
+  while(token_selector.options.length != 1) {
+    token_selector.options.remove(token_selector.options.length-1);
+  }
+  data = await fetch_req;
+  if (data===null){
+    return;
+  }
+  for(let count=0; count<data["tokens"].length; count++){
+    let token = data["tokens"][count];
+    let option;
+    if (token.created){
+       option = new Option(token.name, token.id, true, true);
+    } else {
+      option = new Option(token.name, token.id);
+    }
+    option.dataset["needs_confirmation"] = token.needs_confirmation;
+    option.dataset["token"] = token.token || '';
+    token_selector.options.add(option);
+  }
+  token_selector.disabled=false;
+  update_qrmodal();
+  document.dispatchEvent(new CustomEvent('spider_token_updated', { data: data }));
+  return false;
+};
+
+{% if request.is_special_user %}
+document.getElementById('share_delete_button').addEventListener("click",update_share_tokens);
+document.getElementById('share_add_button').addEventListener("click",update_share_tokens);
+{% if not uc.is_index %}
+  document.getElementById('share_add_restricted_button').addEventListener("click",update_share_tokens);
+{% endif %}
+document.getElementById('share_refresh_button').addEventListener("click",update_share_tokens);
+{% endif %}
+
+token_selector.addEventListener("change",update_qrmodal);
+
+async function open_qrmodal(event){
+  if(event)
+    event.preventDefault();
+  {% if request.is_special_user %}
+  await update_share_tokens(null);
+  {% endif %}
+  update_qrmodal();
+  presenter.style.display='block';
+  return false;
+}
+
+
+function close_qrmodal(event){
+  if(event)
+    event.preventDefault()
+  presenter.style.display='none';
+}
+
+</script>

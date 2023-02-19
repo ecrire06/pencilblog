@@ -10,3 +10,5 @@ class PostForm(forms.ModelForm):
     widgets = {
             'body_editorjs': EditorJsWidget(config={'minHeight': 100}),
     }
+
+# CHECK https://stackoverflow.com/questions/70354455/django-not-showing-images-in-editor-404-error

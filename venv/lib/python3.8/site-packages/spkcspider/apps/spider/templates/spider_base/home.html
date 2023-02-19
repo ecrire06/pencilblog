@@ -1,0 +1,78 @@
+{% extends "spider_base/nouc_base.html" %}
+{% load i18n static spider_rdf spider_base %}
+{% load flatpages %}
+{% block title %}{% blocktrans trimmed %}
+  Home
+{% endblocktrans %}{% endblock %}
+
+{% block public_meta %}
+  {{block.super}}
+  <meta name="robots" content="allow" />
+  <meta name="description" content="{{SETTINGS.SPIDER_DESCRIPTION|escape}}" />
+{% endblock %}
+
+
+{% block main_classes %}{{block.super}} w3-card-4{% endblock %}
+
+
+{% block content %}
+  {% block frontblock %}
+  <div class="w3-padding">
+    {% concat_string '/' LANGUAGE_CODE '/home/heading/' as heading_pages_localized %}
+    {% get_flatpages heading_pages_localized for request.user as heading_pages %}
+    {% if not heading_pages %}
+      {% get_flatpages '/home/heading/' for request.user as heading_pages %}
+    {% endif %}
+    {% for page in heading_pages %}
+      <div>
+        {{page.content|safe}}
+      </div>
+    {% empty%}
+      <div>
+        <h1>{% blocktrans trimmed %}
+          Welcome to spkcspider
+        {% endblocktrans %}</h1>
+      </div>
+    {% endfor %}
+    {% concat_string '/' LANGUAGE_CODE '/home/main/' as main_pages_localized %}
+    {% get_flatpages main_pages_localized for request.user as main_pages %}
+    {% if not main_pages %}
+      {% get_flatpages '/home/main/' for request.user as main_pages %}
+    {% endif %}
+    {% for page in main_pages %}
+      <div class="w3-margin w3-padding-small w3-white">
+        <h3 class="">{{page.title}}</h3>
+        <hr/>
+        {{page.content|safe}}
+      </div>
+    {% endfor %}
+  </div>
+  {% endblock %}
+  <data hidden="hidden" property="spkc:action:view" datatype="xsd:anyURI">{% action_view %}</data>
+  {% block featured_components %}
+  {% if object_list|length > 0 %}
+  <div class="w3-padding">
+    <div>
+      <h2>{% trans "Featured:" %}</h2>
+    </div>
+    <div style="margin-top:20px" class="w3-padding-small">
+      {% include "spider_base/partials/usercomponent_list_fragment.html" %}
+    </div>
+  </div>
+  <div class="page-manipulation w3-padding" style="margin-top:40px">
+    {% url 'spider_base:ucomponent-listpublic' as searchpath %}
+    {% include 'spider_base/partials/list_footer.html' with searchpath=searchpath %}
+  </div>
+  {% endif %}
+  {% endblock featured_components %}
+  <data hidden="hidden" property="spkc:strength" datatype="xsd:integer">0</data>
+  <div class="w3-margin w3-padding">
+    <a href="{% url 'spider_base:ucomponent-listpublic' %}">
+      <span class="w3-large w3-text-blue">
+        {% blocktrans trimmed %}
+          List public components (spiders)...
+        {% endblocktrans %}
+      </span>
+    </a>
+  </div>
+{% endblock %}

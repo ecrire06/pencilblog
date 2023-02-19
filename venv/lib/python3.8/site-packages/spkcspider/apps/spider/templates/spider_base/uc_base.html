@@ -1,0 +1,16 @@
+{% extends "spider_base/base.html" %}
+{% load spider_rdf %}
+
+
+{% block public_meta %}
+  {{block.super}}
+  {% if uc.featured or uc.user.is_superuser or uc.user.is_staff %}
+    <meta name="robots" content="allow">
+  {% else %}
+    <meta name="robots" content="nofollow">
+  {% endif %}
+{% endblock %}
+
+{% block main_classes %}{{block.super}} spkc-content w3-card-4 color-front-{% if request.is_special_user %}{{uc.strength}}{% else %}{{uc.untrusted_strength}}{% endif %}{% endblock %}
+{% block body_class %}{{block.super}} color-back-{% if request.is_special_user %}{{uc.strength}}{% else %}{{uc.untrusted_strength}}{% endif %}{% endblock %}
+{% block main_attributes %}{{block.super}} prefix="spkc: {% spkc_namespace %} xsd: http://www.w3.org/2001/XMLSchema# rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns#" resource="{{hostpart}}{{ request.path }}"{% endblock %}

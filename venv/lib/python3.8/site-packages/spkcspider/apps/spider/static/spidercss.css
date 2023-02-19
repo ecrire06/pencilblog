@@ -1,0 +1,220 @@
+.spkc-helptag{
+  position:fixed;
+  left:1rem;
+  top:1rem;
+  z-index:100;
+  width:90%;
+}
+
+@media (min-width:601px){
+  .spkc-helptag{
+    position:absolute;
+    left:2rem;
+    top:-1rem;
+    width:40vw
+  }
+}
+
+
+.spkc-content{
+  max-width:980px;
+  margin-right:10px;
+  width:auto;
+}
+@media (min-width:990px){
+  .spkc-content{
+    width:100vw;
+    margin-left:5px;
+    margin-right:auto;
+  }
+}
+
+@media (min-width:1200px){
+  .spkc-content{
+    width:100vw;
+    margin: auto;
+  }
+}
+
+@media (min-width:1400px){
+  .spkc-content{
+    width:100vw;
+    max-width:1200px;
+  }
+}
+
+@media (min-width:1253px){
+  .spkc-modal-content {
+      width: 1250px;
+  }
+}
+
+.spkc-form input[type=text] {
+  padding:8px;
+  display:block;
+  border:none;
+  border-bottom:1px solid #ccc;
+  width:100%;
+}
+
+.spkc-form textarea {
+  resize: none;
+  padding:8px;
+  display:block;
+  border:none;
+  border-bottom:1px solid #ccc;
+  width:100%;
+}
+
+.spkc-variant-text{
+  height:100%;
+  width:100%;
+  position:absolute;
+  left:0;
+  top:0;
+}
+.spkc-variant-errcolor{
+  /* dark red */
+  color:#fff!important;
+  background-color:#660000!important;
+}
+
+.spkc-entity-button-text{
+  font-size:17px!important;
+  width:100%;
+  position:absolute;
+  left:0;
+  top:0;
+  vertical-align: middle;
+  text-align:center;
+}
+
+.bodyflex {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+header.cond-top-fix{
+  width:100%;
+  z-index:99;
+}
+
+main.cond-top-fix{
+  margin-top:20px;
+}
+
+main.footer-fix{
+  margin-bottom:10px;
+  flex: 1;
+}
+@media (min-width:601px){
+  .spkc-entity-button{
+    width:25px;
+  }
+  @media (min-height:300px){
+    header.cond-top-fix{
+      top:0;
+      position:fixed;
+    }
+    main.cond-top-fix{
+      margin-top:45px;
+    }
+  }
+}
+
+.protection-wrapping{
+  padding: 4px 6px 4px 0px;
+}
+
+.color-fresh-contentvariant{
+  /* pale green more green */
+  color:#000;
+  background-color:#d9ffb3;
+}
+
+.color-used-contentvariant{
+  /* pale green more blue */
+  color:#000;
+  background-color:#ddffdd;
+}
+
+
+.color-used-and-unique-contentvariant{
+  /* orange */
+  color:#000;
+  background-color:#ffe6b3;
+}
+
+
+.color-front-0{
+  /* pale blue */
+  color:#000;
+  background-color:#ddffff;
+}
+
+.color-back-0{
+  /* blue */
+  color:#fff;
+  background-color:#2196F3;
+}
+
+.color-front-1, .color-front-2, .color-front-3, .color-front-4{
+  /* pale blue2 */
+  color:#000;
+  background-color:#ccf5ff;
+}
+
+.color-back-1, .color-back-2, .color-back-3, .color-back-4{
+  /* blue2 */
+  color:#fff;
+  background-color:#005266;
+}
+
+.color-front-5{
+  /* pale green */
+  color:#000;
+  background-color:#ddffdd;
+}
+
+.color-back-5{
+  /* green */
+  color:#fff;
+  background-color:#4CAF50;
+}
+
+.color-front-6, .color-front-7, .color-front-8{
+  /* pale green */
+  color:#000;
+  background-color:#d9ffb3;
+}
+
+.color-back-6, .color-back-7, .color-back-8{
+  /* green */
+  color:#fff;
+  background-color:#264d00;
+}
+
+.color-front-9{
+  /* pale violet */
+  color:#000;
+  background-color:#ffccff;
+}
+
+.color-back-9{
+  /* dark violet */
+  color:#fff;
+  background-color:#660066;
+}
+
+.color-front-10{
+  /* pale yellow */
+  color:#000;
+  background-color:#ffffcc;
+}
+
+.color-back-10{
+  /* yellow */
+  color:#000;
+  background-color:#ffeb3b;
+}

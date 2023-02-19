@@ -1,0 +1,61 @@
+{% load i18n widget_tweaks spider_rdf %}
+{% for hidden in form.hidden_fields %}
+{{ hidden }}
+{% endfor %}
+<ul class="w3-ul spkc-form" rel="spkc:properties">
+  {% for field in form.visible_fields %}
+    {% if field.field.widget.input_type == "start_pseudo" %}
+      <li>
+        {% render_field field %}
+          <ul class="w3-ul">
+    {% elif field.field.widget.input_type == "stop_pseudo" %}
+          </ul>
+        {% render_field field %}
+      </li>
+    {% else %}
+      <li id="{{field.auto_id}}_wrapper" class="{% if field.errors %}w3-pale-red{% endif %}" typeof="spkc:Property">
+        <div>
+          <data hidden="hidden" property="spkc:fieldname" datatype="xsd:string">{{field.html_name}}</data>
+          <data hidden="hidden" property="spkc:name" datatype="xsd:string">{{field.name}}</data>
+          {% hashable_literalize field as hashable %}
+          <data hidden="hidden" property="spkc:hashable" datatype="xsd:boolean">{{hashable}}</data>
+          <label class="w3-block" for="{{ field.auto_id }}">
+            {{ field.label }}<sup class="w3-small {% if field.field.disabled %}w3-text-grey{% else %}w3-text-red{% endif %}">{% if field.field.required and form.use_required_attribute %}*{% endif %}</sup>:{% if field.help_text %}
+            <span class="w3-tooltip"><i class="fas fa-question-circle w3-white w3-text-blue" aria-label="{% trans 'info' %}"></i><small class="w3-text w3-grey w3-card w3-padding w3-round spkc-helptag">
+              {{ field.help_text|safe }}
+            </small></span>{% endif %}
+          </label>
+          {% if field.field.widget.allow_multiple_selected %}
+            {% for val in field|field_to_python %}
+              {% include "spider_base/partials/rdfvalue.html" with value=val field=field %}
+            {% empty %}
+              <data hidden="hidden" property="spkc:value" resource="rdf:nil"></data>
+            {% endfor %}
+          {% else %}
+              {% include "spider_base/partials/rdfvalue.html" with value=field field=None %}
+          {% endif %}
+          {% block form_widget %}
+          {% if field|widget_type == "checkboxselectmultiple" %}
+          {% render_field field class+="w3-ul" %}
+          {% elif field|widget_type == "HTMLWidget" %}
+          {% render_field field class+="w3-white" style="padding: 6px 8px;" %}
+          {% else %}
+          {% render_field field %}
+          {% endif %}
+          {% endblock form_widget %}
+        </div>
+        {% if field.errors %}
+          <div class="w3-text-red">
+            <ul>
+              {% for error in field.errors %}
+              <li class="">
+                {{ error }}
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      {% endif %}
+    </li>
+  {% empty %}{{form_empty_message|safe}}{% endfor %}
+</ul>

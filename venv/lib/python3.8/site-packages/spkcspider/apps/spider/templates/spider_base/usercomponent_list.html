@@ -1,0 +1,78 @@
+{% extends "spider_base/nouc_base.html" %}
+{% load i18n static spider_rdf spider_base %}
+{% block title %}{% url 'spider_base:ucomponent-listpublic' as listpublic %}{% if listpublic == request.path %}{% blocktrans trimmed %}
+  Public Components
+{% endblocktrans %}{% elif request.is_owner %}{% blocktrans trimmed %}
+  Own Components
+{% endblocktrans %}{% else %}{% blocktrans trimmed with name=username %}
+    Components of {{name}}
+  {% endblocktrans %}
+{% endif %}{% endblock %}
+
+{% block public_meta %}
+  {{block.super}}
+  <meta name="robots" content="allow" />
+  <meta name="description" content="{{SETTINGS.SPIDER_DESCRIPTION|escape}}" />
+{% endblock %}
+
+
+{% block content %}
+  {% url 'spider_base:ucomponent-listpublic' as listpublic %}
+  <div class="w3-padding">
+    <span class="w3-left">
+      {% if listpublic != request.path %}
+        <a class="w3-block" style="margin-bottom:5px" href="{% fullurl_with_params 'spider_base:ucomponent-listpublic' request.GET %}">
+          <i class="fas fa-arrow-up" style="margin-right:10px" aria-hidden="true"></i>{% trans 'Public' %}
+        </a>
+      {% endif %}
+        <a class="w3-block" href="{% fullurl_with_params 'home' request.GET %}">
+          <i class="fas {% if request.user == uc.user or request.is_staff %}fa-angle-double-up{% else %}fa-home{% endif %}" style="margin-right:10px" aria-hidden="true"></i>{% trans 'Home' %}
+        </a>
+    </span>
+    {% if listpublic == request.path %}
+    <data hidden="hidden" property="spkc:strength" datatype="xsd:integer">0</data>
+    {% else %}
+    <data hidden="hidden" property="spkc:strength" datatype="xsd:integer">10</data>
+    <data hidden="hidden" property="spkc:action:view" datatype="xsd:anyURI">{% action_view %}</data>
+    {% endif %}
+    {% if request.user.is_authenticated %}
+      <span class="w3-right w3-left-align">
+        {% if request.is_owner %}
+          <a rel="nofollow" class="w3-block" style="margin-bottom:5px" href="{% fullurl_with_params 'spider_base:ucomponent-add' %}">
+            <i class="fas fa-plus" style="margin-right:10px" aria-hidden="true"></i>
+            {% trans 'Add New Component' %}
+          </a>
+        {% endif %}
+        {% if listpublic == request.path %}
+          <a rel="nofollow" class="w3-block" href="{% url 'spider_base:ucomponent-list' %}">
+            <i class="fas fa-list-ul" style="margin-right:10px" aria-hidden="true"></i>{% trans 'Own' %}
+          </a>
+        {% else %}
+          <a rel="nofollow" style="margin-bottom:5px" class="w3-block" href="{% if not request.is_owner %}{% fullurl_with_params 'spider_base:ucomponent-export' user=collection_user %}{% else %}{% fullurl_with_params 'spider_base:ucomponent-export' %}{% endif %}">
+            <i class="fas fa-cloud-download-alt" style="margin-right:10px" aria-hidden="true"></i>{% trans 'Export' %}
+          </a>
+          {% get_component_token 'index' request.user as index_token %}
+          <a href="{{hostpart}}{% url 'spider_base:entity-delete' token=index_token %}">
+            <i class="fas fa-trash" style="margin-right:10px" aria-hidden="true"></i>{% trans 'Delete' %}
+          </a>
+        {% endif %}
+      </span>
+    {% endif %}
+    <h1 class="w3-center">
+      {% if listpublic == request.path %}{% blocktrans trimmed %}
+        Public Components
+      {% endblocktrans %}{% elif request.is_owner %}{% blocktrans trimmed %}
+        Own Components
+      {% endblocktrans %}{% else %}{% blocktrans trimmed %}
+          Component List of
+        {% endblocktrans %} <b>{{username}}</b>
+      {% endif %}
+    </h1>
+  </div>
+  <div style="margin-top:20px" class="w3-padding">
+    {% include "spider_base/partials/usercomponent_list_fragment.html" %}
+  </div>
+  <div class="page-manipulation w3-padding" style="margin-top:40px">
+    {% include 'spider_base/partials/list_footer.html' %}
+  </div>
+{% endblock %}

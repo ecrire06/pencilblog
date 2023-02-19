@@ -1,0 +1,20 @@
+{% load i18n %}
+{% if not inner_form %}
+<div class="w3-padding">
+{% endif %}
+{% include "spider_base/edit_form.html" %}
+{% if not inner_form %}
+</div>
+{% endif %}
+<div style="word-break: break-all" class="w3-padding">
+  <table class="w3-table-all" style="width:100%">
+    <thead>
+      <tr><th>{% trans "Verifier for this type" %}:</th></tr>
+    </thead>
+    <tbody>
+      {% for verifier in object.content.layout.default_verifiers %}
+        <tr><td><button class="w3-btn" form="request_verification_form" type="button">{{verifier}}</button><td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

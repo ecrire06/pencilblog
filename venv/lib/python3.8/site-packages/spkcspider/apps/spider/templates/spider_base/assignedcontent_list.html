@@ -1,0 +1,244 @@
+{% extends "spider_base/uc_base.html" %}
+{% load i18n static spider_base spider_paging spider_rdf %}
+{% block title %}{% if uc.public %}{% blocktrans trimmed %}
+  Content of:
+{% endblocktrans %} {{uc}} ({{uc.username}}){% else %}{% blocktrans trimmed %}
+  Content List
+{% endblocktrans %}{% endif %}{% endblock %}
+
+{% block public_meta %}
+  {{block.super}}
+  <meta name="description" content="{{uc.description|escape}}" />
+{% endblock %}
+
+{% block main_attributes %}{{block.super}} typeof="spkc:Component"{% endblock %}
+
+{% block content %}
+<div>
+  <data hidden="hidden" property="spkc:action:view" datatype="xsd:anyURI">{% action_view %}</data>
+  <data hidden="hidden" property="spkc:type" datatype="xsd:string">Component</data>
+  <div class="w3-padding" style="min-height:140px">
+    <span class="w3-left">
+      {% if request.user == uc.user %}
+        <a class="w3-block" style="margin-bottom:5px" href="{% url 'spider_base:ucomponent-list' %}">
+          <i class="fas fa-arrow-up" style="margin-right:10px" aria-hidden="true"></i>{% trans 'Own' %}
+        </a>
+      {% endif %}
+      <a class="w3-block" style="margin-bottom:5px" href="{% url 'spider_base:ucomponent-listpublic' %}">
+        <i class="fas {% if request.user == uc.user or request.is_staff %}fa-angle-double-up{% else %}fa-arrow-up{% endif %}" style="margin-right:10px" aria-hidden="true"></i>{% trans 'Public' %}
+      </a>
+    </span>
+    <span class="w3-right w3-left-align">
+      {% if request.user == uc.user %}
+        <a class="w3-block" style="margin-bottom:5px" href="{% url 'spider_base:ucomponent-update' token=uc.token %}">
+          <i class="fas fa-edit" style="margin-right:10px" aria-hidden="true"></i>{% trans 'Update' %}
+        </a>
+      {% endif %}
+      {% if request.is_staff and uc.user != request.user %}
+        <a class="w3-block" style="margin-bottom:5px" href="{% url 'spider_base:ucomponent-list' user=uc.user %}">
+          <i class="fas fa-arrow-up" style="margin-right:10px" aria-hidden="true"></i>{% trans 'User' %}
+        </a>
+      {% endif %}
+      <a rel="nofollow" class="w3-block" style="margin-bottom:5px" onclick="if(document.readyState === 'complete'){return open_qrmodal(event);}; return false;" href="#">
+        <i class="fas fa-file-export" style="margin-right:10px" aria-hidden="true"></i>{% if uc.is_index %}{% trans 'Login Token' %}{% else %}{% trans 'Share' %}{% endif %}
+      </a>
+      {% if request.is_special_user %}
+      <a rel="nofollow" class="w3-block" style="margin-bottom:5px" href="{% url 'spider_base:ucontent-export' token=uc.token %}">
+        <i class="fas fa-cloud-download-alt" style="margin-right:10px" aria-hidden="true"></i>{% trans 'Export' %}
+      </a>
+      {% endif %}
+      <div>
+        <i class="fas fa-lock" style="margin-right:10px" aria-hidden="true"></i>{% trans "Strength:" %} <data property="spkc:strength" datatype="xsd:integer">{% if request.is_special_user %}{{uc.strength}}{% else %}{{uc.untrusted_strength}}{% endif %}</data>
+      </div>
+    </span>
+    <h1 class="w3-center">
+      {% if request.is_special_user or uc.public %}
+        {% blocktrans trimmed %}
+          Content of:
+        {% endblocktrans %} <b>{{uc}}</b> <em>({{uc.user}})</em>
+        <data hidden="hidden" rel="spkc:properties">
+          <data hidden="hidden" typeof="spkc:Property">
+            <data hidden="hidden" property="spkc:name" datatype="xsd:string">name</data>
+            <data hidden="hidden" property="spkc:value" datatype="xsd:string">{{uc.name}}</data>
+          </data>
+          <data hidden="hidden" typeof="spkc:Property">
+            <data hidden="hidden" property="spkc:name" datatype="xsd:string">user</data>
+            <data hidden="hidden" property="spkc:value" datatype="xsd:string">{{uc.username}}</data>
+          </data>
+        </data>
+      {% else %}
+        {% blocktrans trimmed %}
+          Content:
+        {% endblocktrans %}
+      {% endif %}
+    </h1>
+    {% for name in machine_variants %}
+      <data hidden="hidden" property="spkc:create:name" datatype="xsd:string">{{name}}</data>
+    {% endfor %}
+    {% for f in active_features %}
+      {% for action in f.feature_urls %}
+        <data hidden="hidden" typeof="spkc:action:feature" resource="{{hostpart}}{{action.url}}">
+          <data hidden="hidden" property="spkc:feature:name" datatype="xsd:string">{{action.name}}</data>
+        </data>
+      {% endfor %}
+    {% endfor %}
+    <data hidden="hidden" rel="spkc:properties">
+      <data hidden="hidden" typeof="spkc:Property">
+        <data hidden="hidden" property="spkc:name" datatype="xsd:string">features</data>
+        <data hidden="hidden" property="spkc:hashable" datatype="xsd:boolean">false</data>
+        {% for f in active_features %}
+          <data hidden="hidden" datatype="xsd:string" property="spkc:value">{{f.name}}</data>
+        {% empty %}
+          <data hidden="hidden" property="spkc:value" resource="rdf:nil"></data>
+        {% endfor %}
+      </data>
+      <data hidden="hidden" typeof="spkc:Property">
+        <data hidden="hidden" property="spkc:name" datatype="xsd:string">description</data>
+        <data hidden="hidden" property="spkc:value" datatype="xsd:string">{{uc.description}}</data>
+        <data hidden="hidden" property="spkc:hashable" datatype="xsd:boolean">false</data>
+      </data>
+      {% if uc.primary_anchor %}
+      <data hidden="hidden" typeof="spkc:Property">
+        <data hidden="hidden" property="spkc:name" datatype="xsd:string">primary_anchor</data>
+        <data hidden="hidden" property="spkc:hashable" datatype="xsd:boolean">false</data>
+        <data hidden="hidden" property="spkc:value" datatype="xsd:anyURI">{{hostpart}}{{uc.primary_anchor.get_absolute_url}}</data>
+      </data>
+      {% endif %}
+      <data hidden="hidden" typeof="spkc:Property">
+        <data hidden="hidden" property="spkc:name" datatype="xsd:string">intentions</data>
+        <data hidden="hidden" property="spkc:hashable" datatype="xsd:boolean">false</data>
+        {% for i in intentions %}
+          <data hidden="hidden" property="spkc:value" datatype="xsd:string">{{i}}</data>
+        {% empty %}
+          <data hidden="hidden" property="spkc:value" resource="rdf:nil"></data>
+        {% endfor %}
+      </data>
+    </data>
+    {% if uc.description %}
+      <div class="w3-white w3-center">
+        {{uc.description|linebreaks}}
+      </div>
+    {% endif %}
+    {% if request.token_expires %}
+    <div>
+      {% include 'spider_base/partials/token_lifetime.html' with rtime=request.token_expires %}
+    </div>
+    {% endif %}
+  </div>
+  {% list_parameters "search" as cur_search %}
+  {% if request.is_owner and not cur_search %}
+    <div class="w3-padding" style="margin-bottom:30px">
+      <details {% if object_list|length < 2 %}open="open"{% endif %}>
+        <summary class="w3-button w3-hover-dark-grey w3-black">
+          <i class="fas fa-plus" style="margin-right:10px" aria-hidden="true"></i>
+          {% trans 'Add new content' %}
+          <i class="fas fa-caret-down" style="margin-left:5px" aria-hidden="true"></i>
+        </summary>
+        <div class="w3-white w3-border">
+          {% include "spider_base/partials/content_variants_box.html" %}
+        </div>
+      </details>
+    </div>
+  {% endif %}
+
+  {% if visible_active_features.exists %}
+  <div class="w3-padding">
+    <div class="w3-white w3-padding">
+      <h4>{% trans 'Active Features' %}:</h4>
+      <div>
+        {% for f in visible_active_features %}
+          <span class="" style="display:inline-block;white-space:nowrap;">{{f}}{% if not forloop.last %}, {% endif %}</span>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  <div class="w3-margin">
+    <table class="w3-table w3-bordered" rel="spkc:contents">
+      <tbody>
+      {% for content in object_list %}
+        <tr class="w3-light-grey" resource="{% url 'spider_base:ucontent-access' token=content.token access='view' %}" typeof="spkc:Content">
+          <td class="" style="min-height:48px;display:inline-block;word-break: break-all;">
+            <data hidden="hidden" property="spkc:type" datatype="xsd:string">{{content.ctype.name}}</data>
+            <span rel="spkc:properties">
+              <span>{{ content }}<span class="w3-small" style="margin-left: 5px">({{ content.ctype }})</span></span>
+              <data hidden="hidden" typeof="spkc:Property">
+                <data hidden="hidden" property="spkc:name" datatype="xsd:string">info</data>
+                <data hidden="hidden" property="spkc:value" datatype="xsd:string">{{content.info}}</data>
+              </data>
+              <data hidden="hidden" typeof="spkc:Property">
+                <data hidden="hidden" property="spkc:name" datatype="xsd:string">id</data>
+                <data hidden="hidden" property="spkc:value" datatype="xsd:integer">{{content.id}}</data>
+              </data>
+              <data hidden="hidden" typeof="spkc:Property">
+                <data hidden="hidden" property="spkc:name" datatype="xsd:string">name</data>
+                <data hidden="hidden" property="spkc:value" datatype="xsd:string">{{content.name|escape}}</data>
+              </data>
+              <data hidden="hidden" typeof="spkc:Property">
+                <data hidden="hidden" property="spkc:name" datatype="xsd:string">description</data>
+                <data hidden="hidden" property="spkc:value" datatype="xsd:string">{{content.description|escape}}</data>
+              </data>
+            </span>
+          </td>
+          <td>
+            {% if uc.public or request.is_special_user %}
+              {% blocktrans trimmed with time=content.modified|timesince %}
+              Modified: {{time}} ago
+              {% endblocktrans %}
+            {% endif %}
+          </td>
+          <td style="display:inline-block">
+            <data hidden="hidden" property="spkc:type" datatype="xsd:string">{{ content.ctype.name }}</data>
+            <div class="w3-bar w3-round-large w3-tiny w3-blue">
+              <a style="{% if request.is_owner  %}width:34%{% else %}width:100%{% endif %}" class="w3-hover-black w3-button w3-bar-item w3-tooltip w3-mobile" href="{% fullurl_with_params 'spider_base:ucontent-access' sanitized_GET token=content.token access='view' %}">
+                <div class="spkc-entity-button"><i class="fas fa-eye" alt="{% trans 'View' %}" aria-label="{% trans 'View' %}"></i></div>
+                <div aria-hidden="true" class="w3-text w3-black spkc-entity-button-text"><div class="w3-animate-opacity">{% trans "View" %}</div></div>
+              </a>
+              {% if request.is_owner  %}
+              <a style="width:33%" rel="nofollow" class="w3-hover-black w3-button w3-bar-item w3-tooltip w3-mobile" href="{% fullurl_with_params 'spider_base:ucontent-access' sanitized_GET token=content.token access='update' %}" property="spkc:action:update">
+                <div class="spkc-entity-button"><i class="fas fa-edit" alt="{% trans 'Edit' %}" aria-label="{% trans 'Edit' %}"></i></div>
+                <div aria-hidden="true" class="w3-text w3-black spkc-entity-button-text"><div class="w3-animate-opacity">{% trans "Edit" %}</div></div>
+              </a>
+              <a style="width:33%" rel="nofollow" class="w3-hover-black w3-button w3-bar-item w3-tooltip w3-mobile" href="{% fullurl_with_params 'spider_base:entity-delete' sanitized_GET token=uc.token %}cid={{content.id}}&" property="spkc:action:delete">
+                <div class="spkc-entity-button"><i class="fas fa-trash" alt="{% trans 'Delete' %}" aria-label="{% trans 'Delete' %}"></i></div>
+                <div aria-hidden="true" class="w3-text w3-black spkc-entity-button-text"><div class="w3-animate-opacity">{% trans "Del" %}</div></div>
+              </a>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+        <tr><td colspan="3" style="padding:0; word-break: break-all;">
+          <div class="w3-white w3-padding w3-border-bottom" style="{% if not forloop.last %}margin-bottom:20px{% endif %}">
+            {% with content.localized_description as description %}
+              {% if not description|is_not_or_space %}
+                {{description|escape|linebreaksbr}}
+              {% else %}
+                <span class="w3-text-gray">{% trans 'No description' %}</span>
+              {% endif %}
+            {% endwith %}
+          </div>
+        </td></tr>
+      {% empty %}
+        <tr class="w3-light-grey"><td colspan="3">
+            <data hidden="hidden" resource="rdf:nil"></data>
+            {% trans 'No User Content available.' %}
+        </td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="page-manipulation w3-padding" style="margin-top:40px">
+    {% list_parameters "search" as cur_search %}
+    {% if request.is_special_user and has_unlisted and "_unlisted" not in cur_search %}
+      {% blocktrans trimmed %}
+        This Component contains unlisted content, use "_unlisted" in search to see and edit them
+      {% endblocktrans %}
+    {% endif %}
+    {% include 'spider_base/partials/list_footer.html' %}
+  </div>
+</div>
+{% endblock %}
+
+{% block outercontent %}
+{% include "spider_base/partials/share_modal.html" %}
+{% endblock %}

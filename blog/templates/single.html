@@ -37,8 +37,8 @@
                                     {% endfor %}
                                 </li>
                                 <li>{{ post.author}}</li>
-                                <li><a href="{% url 'update' post.pk %}">수정</a></li>
-                                <li><a href="{% url 'delete' post.pk %}">삭제</a></li>
+                                {% load hitcount_tags %}
+                                <li>조회수: {{ hitcount.total_hits }}</li>
                             </ul>
                         </div>
                      
@@ -63,10 +63,26 @@
                                       {% endif %}
                                     {% endfor %}
                     </p>
+                    <div class="entry__meta">
+                      <ul>
+                        <li><a href="{% url 'update' post.pk %}">수정</a></li>
+                        <li><a href="{% url 'delete' post.pk %}">삭제</a></li>
+                      </ul>
+                    </p>
 
                     <ul class="entry__post-nav h-group">
-                        <li class="prev"><a rel="prev" href="#0"><strong class="h6">Previous Article</strong> Duis Sed Odio Sit Amet Nibh Vulputate</a></li>
-                        <li class="next"><a rel="next" href="#0"><strong class="h6">Next Article</strong> Morbi Elit Consequat Ipsum</a></li>
+                      <!--PREVIOUS POST-->
+                        {% if previous %}
+                          <li class="previous"><a rel="previous" href="{% url 'single' previous.pk %}"><strong class="h6">Previous Article</strong> {{ previous }}</a></li>
+                        {% else %}
+                          <li class="previous"><a rel="previous" href="#0"><strong class="h6">Previous Article</strong> {{ previous }}</a></li>
+                        {% endif %}
+                      <!--NEXT POST-->
+                        {% if next %}
+                          <li class="next"><a rel="next" href="{% url 'single' next.pk %}"><strong class="h6">Next Article</strong> {{ next }}</a></li>
+                        {% else %}
+                          <li class="next"><a rel="next" href="#0"><strong class="h6">Next Article</strong> {{ next }}</a></li>
+                        {% endif %}
                     </ul>
 
                 </article> <!-- end entry -->

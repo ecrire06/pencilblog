@@ -1,0 +1,72 @@
+{% extends "spider_base/assignedcontent_access.html" %}
+{% load i18n spider_rdf %}
+
+{% block render_content %}
+{% include "spider_base/partials/form_errors.html" with form=form %}
+<form class="w3-padding" id="main_form" action="{{ request.get_full_path }}" enctype="{{enctype}}" method="post">
+  <input type="hidden" property="spkc:csrftoken" name="csrfmiddlewaretoken" datatype="xsd:string" content="{{csrf_token}}" value="{{csrf_token}}">
+  {# horizontal scrolling here not neccessary #}
+  <h2>{% trans 'Content Settings' %}</h2>
+  <fieldset style="width:100%">
+    <legend></legend>
+    {% include "spider_base/partials/base_form.html" with form=form %}
+  </fieldset>
+  {% if content %}
+    {# fieldsets don't allow horizontal scrolling #}
+    <h2>{% if scope == "add" %}{{object}}{% else %}{{object.ctype}}{% endif %}</h2>
+    <div class="w3-border w3-padding">
+      {{content|safe}}
+    </div>
+  {% endif %}
+  <div class="w3-padding">
+    <button name="submit_button" class="w3-button w3-grey">
+      {% if scope == "add" %}
+        {% trans 'Create' %}
+      {% else %}
+        {% trans 'Update' %}
+      {% endif %}
+    </button>
+    {% if scope == "update" and VariantType.raw_update in object.ctype.ctype %}
+      <a class="w3-button w3-grey" onclick="if(document.readyState === 'complete'){open_rawupdate_qrmodal();}; return false;" href="#">
+        <i class="fas fa-settings" aria-hidden="true"></i>
+        {% trans 'Update Raw Content' %}
+      </a>
+    {% endif %}
+
+    {% if scope != "add" %}
+      <a class="w3-right" href="{% url 'spider_base:ucontent-access' token=object.token access='view' %}?{{request.GET.urlencode}}">
+        {% trans "View" %}
+      </a>
+    {% endif %}
+  </div>
+</form>
+{% for i in extra_outer_forms %}
+<form id="{{i}}" method="post" hidden="hidden"></form>
+{% endfor %}
+{% endblock %}
+
+
+{% block outercontent %}
+{{block.super}}
+{% if scope == "update" and VariantType.raw_update in object.ctype.ctype %}
+  {% url 'spider_base:ucontent-access' token=object.token access='raw_update' as rawupdatelink %}
+  {% include "spider_base/partials/rawupdate_modal.html" with rawupdatelink=rawupdatelink %}
+{% endif %}
+{% if scope == "update" and object.primary_anchor_for.exists %}
+<script type="text/javascript">
+  var component_select = document.getElementById('id_content_control-usercomponent');
+  var component_select_hider = document.getElementById('id_content_control-migrate_primary_anchor_wrapper');
+  if(component_select.value == "{{uc.id}}"){
+    component_select_hider.classList.add("w3-hide")
+  }
+  component_select.addEventListener("change", function(event){
+    if(event.target.value == "{{uc.id}}"){
+      component_select_hider.classList.add("w3-hide");
+    }else {
+      component_select_hider.classList.remove("w3-hide");
+    }
+  }, true)
+</script>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,37 @@
+{% load i18n spider_base basic_math %}
+<span>{% trans 'Remaining lifetime of token' %}:</span>
+
+{% expires_delta rtime as delta %}
+<span id="tokenlifetime-countdown">
+  {% blocktrans trimmed with days=delta.days hours=delta.seconds|divide:"3600" minutes=delta.seconds|remainder:"3600"|divide:"60" seconds=delta.seconds|remainder:"60" %}
+  Days: {{days}} {{hours}}h:{{minutes}}m:{{seconds}}s
+  {% endblocktrans %}
+</span>
+<script>
+  // save timestamp of django
+  var timestamp = Math.floor({{rtime.timestamp}});
+
+  var interval_id = setInterval(function() {
+    // calculate difference between timestamp and current time
+    let remaining_tokenlifetime_seconds = timestamp - Math.floor(new Date().getTime()/1000);
+    let formatted;
+    let seconds = remaining_tokenlifetime_seconds;
+    if (seconds > 0){
+      let days = Math.floor(seconds / 86400)
+      seconds = seconds%86400;
+      let hours = Math.floor(seconds / 3600)
+      seconds = seconds%3600;
+      let minutes = Math.floor(seconds / 60);
+      seconds = seconds%60; // trivial
+      formatted = `{% blocktrans trimmed with days="${days}"|safe hours="${hours}"|safe minutes="${minutes}"|safe seconds="${seconds}"|safe %}
+      Days: {{days}} {{hours}}h:{{minutes}}m:{{seconds}}s
+      {% endblocktrans %}`;
+    } else {
+      clearInterval(interval_id);
+      formatted = '{% trans "Expired" %}';
+    }
+    document.getElementById("tokenlifetime-countdown").innerHTML = formatted;
+  }, 1000)
+
+
+</script>
