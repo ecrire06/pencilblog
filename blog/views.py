@@ -1,13 +1,14 @@
 # ===========DJANGO RELATED==================
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.detail import SingleObjectMixin
 from django.db.models import Q
 from django.shortcuts import render
 
 # ============CUSTOM MADE===============
 from .models import Post
-from .forms import PostForm
+from .forms import PostForm, CommentForm
 from search_views.search import SearchListView
 from search_views.filters import BaseFilter
 from hitcount.views import HitCountDetailView
@@ -35,7 +36,12 @@ class PostDetailView(HitCountDetailView):
       now = self.object
       context['next'] = next_in_order(now)
       context['previous'] = prev_in_order(now, loop=True)
+      context['form'] = CommentForm()
       return context
+
+  def post(self, request, *args, **kwargs):
+        view = PostComment.as_view()
+        return view(request, *args, **kwargs)
 
 
 class PostCreateView(LoginRequiredMixin, generic.CreateView):
@@ -99,6 +105,32 @@ class TaggedPostView(generic.ListView):
 
   def get_queryset(self):
       return Post.objects.filter(tags__name=self.kwargs['tag'])
+
+# ===========COMMENT======================
+class PostComment(SingleObjectMixin, generic.FormView):
+    model = Post
+    form_class = CommentForm
+    template_name = 'single.html'
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().post(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super(PostComment, self).get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
+    def form_valid(self, form):
+        comment = form.save(commit=False)
+        comment.post = self.object
+        comment.name = self.request.user
+        comment.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        post = self.get_object()
+        return reverse('single', kwargs={'pk': post.pk})
   
 # ===============FUNCTION BASED VIEWS=====================
 # =========JUST FOR SIMPLE LINK FOR TEMPLATES==============

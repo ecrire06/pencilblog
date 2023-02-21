@@ -6,9 +6,10 @@
 
             <div class="s-header__content column">
                 <h1 class="s-header__logotext">
-                    <a href="/" title="">Pencil Blog</a>
+                    {% load static %}
+                    <a href="/" title=""><img alt="PenFan" src="{% static 'images/penfan_logo.png' %}" style="width:50px; height:50px;">PenFan</a>
                 </h1>
-                <p class="s-header__tagline">연필로 살아가는 삶</p>
+                <p class="s-header__tagline">연필과 펜으로 살아가는 삶</p>
             </div>
 
         </div> <!-- end row -->
@@ -33,10 +34,15 @@
                             <li><a href="{% url 'blog' %}">Blog Entries</a></li>
                         </ul>
                     </li>
-                   -->
-                    <li><a href="{% url 'archives' %}">Archives</a></li>
-                    <li><a href="{% url 'about' %}">About</a></li>
                     <li><a href="{% url 'changelog' %}">ChangeLog</a></li>
+                    <li>
+                      {% if not user.is_authenticated %}
+                      <a class="nav-link" href="{% url 'signup' %}">회원가입</a>
+                      {% endif %}
+                    </li>
+                   -->
+                    <li><a href="{% url 'about' %}">About</a></li>
+                    <li><a href="{% url 'archives' %}">Archives</a></li>
                     <li><a href="{% url 'new' %}">글 작성하기</a></li>
                     <li>
                         {% if user.is_authenticated %}
@@ -44,11 +50,6 @@
                         {% else %}
                         <a href="{% url 'login' %}">로그인</a>
                         {% endif %}
-                    </li>
-                    <li>
-                      {% if not user.is_authenticated %}
-                      <a class="nav-link" href="{% url 'signup' %}">회원가입</a>
-                      {% endif %}
                     </li>
                 </ul> <!-- end #nav -->
 

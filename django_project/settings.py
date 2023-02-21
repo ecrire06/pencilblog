@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'django_editorjs_fields',
     'hitcount',
     'next_prev',
+    'cloudinary',
 
     # 사용자 앱
     'blog',
@@ -68,6 +69,16 @@ LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 # ===========COMMENT==================
 COMMENTS_APP = 'django_comments_xtd'
+# ==========CLOUDINARY============
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
+cloudinary.config(
+  cloud_name = "doscvxfzt",
+  api_key = "822533478187377",
+  api_secret = "nVKOwQCogW3-Kjf9rBYxwGT-wf8",
+)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
