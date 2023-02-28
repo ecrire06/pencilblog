@@ -40,16 +40,13 @@
                           <a href="{% url 'tagged-post' tag.name %}">{{ tag }} ({{tag.num_times}})</a>
                         {% endfor %}
                     </div>
-                </div>
-              <!--POPULAR POST
+                </div
                 <div class="widget widget_popular">
-                    <h3 class="h6">Popular Post.</h3>
+                    <h3 class="h6">Popular Posts.</h3>
 
                     <ul class="link-list">
-                        <li><a href="#">Sint cillum consectetur voluptate.</a></li>
-                        <li><a href="#">Lorem ipsum Ullamco commodo.</a></li>
-                        <li><a href="#">Fugiat minim eiusmod do.</a></li>
+                        <li><a href="{% url 'single' 12 %}">연필의 필기감에 관하여...</a></li>
+                        <li><a href="{% url 'single' 11 %}">New Logo</a></li>
                     </ul>
                 </div>
-              -->
            </div> <!-- end sidebar -->

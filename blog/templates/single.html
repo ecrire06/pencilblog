@@ -46,10 +46,12 @@
 
                     <div class="entry__content">
                         <p class="">
+                        <!--IMAGE
                           {% if post.image %}
                             <img src="{{ post.image.url }}" alt="image">
                           {% else %}
                           {% endif %}
+                        -->
                           {% load editorjs %}
                           {{ post.body_editorjs_text | editorjs }}
                           {{ post.body_editorjs_custom | editorjs }}

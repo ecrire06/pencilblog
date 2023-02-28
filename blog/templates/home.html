@@ -42,14 +42,15 @@
                         </div>
 
                     </header>
-
+                    {{ post.summary }}
+                  <!--IMAGE
                     <div class="entry__content">
                         {% if post.image %}
                           <img src="{{ post.image.url }}" alt="image">
                         {% else %}
                         {% endif %}
                     </div>
-
+                  -->
                 </article> <!-- end entry -->
                 {% endif %}
               {% endfor %}

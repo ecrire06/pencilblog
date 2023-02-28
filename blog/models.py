@@ -16,6 +16,7 @@ class Post(models.Model):
     is_published = models.BooleanField(default=False)
     tags = TaggableManager()
     image = CloudinaryField(blank=True, null=True)
+    summary = models.CharField(max_length=1000, default='한줄소개')
     
 
     def __str__(self):
