@@ -21,11 +21,15 @@ from django.views.generic import RedirectView
 from django.conf import settings
 from django.conf.urls.static import static
 
+# ==========FROALA==============
+from froala_editor import views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('blog/', include('blog.urls')),
     path('login/', include('loginapp.urls')),
     path('', RedirectView.as_view(url='/blog', permanent=True)),
+    path('froala_editor/',include('froala_editor.urls')),
 ] 
 
 if settings.DEBUG:

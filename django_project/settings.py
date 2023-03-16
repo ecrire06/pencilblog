@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     'hitcount',
     'next_prev',
     'cloudinary',
+    'froala_editor',
+    'django_quill',
 
     # 사용자 앱
     'blog',
@@ -78,7 +80,7 @@ cloudinary.config(
   cloud_name = "doscvxfzt",
   api_key = "822533478187377",
   api_secret = "nVKOwQCogW3-Kjf9rBYxwGT-wf8",
-)
+) 
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

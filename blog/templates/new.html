@@ -21,8 +21,8 @@
 
                 <form method="POST">
                   {% csrf_token %}
-                  {{ form.as_p }}
                   {{ form.media }}
+                  {{ form.as_p }}
                   <button type="submit" class="btn btn--primary" value="제출">Save</button>
                 </form>
               

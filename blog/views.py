@@ -20,7 +20,7 @@ class PostListView(generic.ListView):
     model = Post
     context_object_name = 'post_list'
     template_name = 'home.html'
-    paginate_by = 4
+    paginate_by = 5
 
     def get_queryset(self):
         return Post.objects.all().order_by('-created_date')

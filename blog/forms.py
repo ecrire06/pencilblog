@@ -7,7 +7,7 @@ from .models import Post, Comment
 class PostForm(forms.ModelForm):
   class Meta:
     model = Post
-    fields = ['title', 'summary', 'body_editorjs_custom', 'tags']
+    fields = ['title', 'summary', 'body_editorjs_custom', 'body_quill', 'tags']
     widgets = {
             'body_editorjs': EditorJsWidget(config={'minHeight': 100}),
     }

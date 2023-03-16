@@ -55,7 +55,8 @@
                           {% load editorjs %}
                           {{ post.body_editorjs_text | editorjs }}
                           {{ post.body_editorjs_custom | editorjs }}
-                          {{ post.content|linebreaksbr }}
+                          
+                          {{ post.body_quill.html | safe }}
                         </p>
                     </div> <!-- entry__content -->
 

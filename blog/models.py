@@ -6,12 +6,14 @@ from django.urls import reverse_lazy
 from taggit.managers import TaggableManager
 from django_editorjs_fields import EditorJsTextField, EditorJsJSONField
 from cloudinary.models import CloudinaryField
+from django_quill.fields import QuillField
 
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL,
                                on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     body_editorjs_custom = EditorJsTextField(blank=True, null=True)
+    body_quill = QuillField(blank=True, null=True)
     created_date = models.DateTimeField(auto_now_add=True)
     is_published = models.BooleanField(default=False)
     tags = TaggableManager()
